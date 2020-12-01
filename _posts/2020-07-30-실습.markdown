@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "Welcome to Jekyll!"
-date:   2015-04-20 08:43:59
-author: Ben Centra
-categories: Jekyll
+title:  "Pytorch Custom 만들기 (pycharm) "
+date:   2020-07-30 08:43:59
+author: Sunwoo Lee
+categories: 실습
 tags:	jekyll welcome
 cover:  "/assets/instacode.png"
 ---
