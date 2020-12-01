@@ -9,10 +9,10 @@ exclude:
   - "/vendor/"
 
 # Site settings
-title: Centrarium
-subtitle: "A simple yet classy theme for your Jekyll website or blog"
-email: blcentra@gmail.com
-name: Ben Centra
+title: Sun's Blog
+subtitle: "딥러닝 개발 노트"
+email: dltjsdn3606@naver.com
+name: Sunwoo Lee
 description: >
   A simple yet classy theme for your Jekyll website or blog.
 # Base URL of site (i.e. /blog). It should always start with a slash,
@@ -54,10 +54,10 @@ jekyll-archives:
 
 # Category descriptions (for archive pages)
 descriptions:
-  - cat: jekyll
+  - cat: Deep Learning Study
     desc: "Posts describing Jekyll setup techniques."
 
-  - cat: dummy
+  - cat: Deep Learning 실습
     desc: "Just some placeholder posts, lorem ipsum and the rest."
 
 # Social icons and sharing options
@@ -198,7 +198,7 @@ protocols:
     fb_image_type: "image/png"
 
     twitter_image: "/assets/logo.png"
-
+    
     os_repo: "https://github.com/bencentra/centrarium.com"
     os_rcs_type: "git"
     os_src: "git@github.com:bencentra/centrarium.com.git"
