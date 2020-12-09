@@ -33,6 +33,7 @@ DenseNet의 구조에 대해서 알고 있다고 생각하고 논문을 코드�
 
 
 ```
+
 class hardnet(nn.Module):
     def __init__(self, n_classes=19):
         super(hardnet, self).__init__()
@@ -48,9 +49,12 @@ HardNet의 파라미터들 부터 선언을 해준다. 여기서 grmul이 growth
 
 <br/>
 
+
+
 #### **`HDB`**
 
 ```
+
 class HarDBlock(nn.Module):
     def get_link(self, layer, base_ch, growth_rate, grmul):
         if layer == 0:
@@ -132,7 +136,7 @@ class HarDBlock(nn.Module):
 <br/>
 
 ```
-    def get_link(self, layer, base_ch, growth_rate, grmul):
+  def get_link(self, layer, base_ch, growth_rate, grmul):
         if layer == 0:
             return base_ch, 0, []
         out_channels = growth_rate
@@ -236,7 +240,7 @@ Labeling은 위에 그림처럼 진행을 하였다.
 
 <Label data 100장, Epoch 1000>
 
-![gt](https://user-images.githubusercontent.com/47741696/101644378-764a4f00-3a78-11eb-8056-e13f39b3c84c.PNG)
+![gt](https://user-images.githubusercontent.com/47741696/101650770-aa753e00-3a7f-11eb-8178-5a8b2e4be04e.PNG)
 
 - SGD
 - Learing rate = 0.02
@@ -247,7 +251,7 @@ Labeling은 위에 그림처럼 진행을 하였다.
 
 <Label data 100장+ rotation 100장 , Epoch 1000>
 
-![gt2](https://user-images.githubusercontent.com/47741696/101644521-a134a300-3a78-11eb-95c6-ac98aaec0f40.PNG)
+![gt2](https://user-images.githubusercontent.com/47741696/101650792-afd28880-3a7f-11eb-996e-ece5f85cd70c.PNG)
 
 - Adam
 - Learning rate = 0.001
