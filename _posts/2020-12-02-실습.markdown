@@ -9,7 +9,7 @@ tags: lorem ipsum
 
 이번에 교내 무선충전 패드 인식 기반 자율주행 주차과제를 진행하면서 주차장 Segmentation 하기위해서 연구를 하였고 현재 **Real-time segmentation Sota**인 **HardNet**을 이용하여 Segmetation을 한 결과를 적어보려고 한다.
 
-### HardNet 논문 리뷰
+### HarDNet 논문 리뷰
 
 이 논문은 이해하기 위해서는 기본적은 DenseNet의 구조에 대해서 알아야한다. DenseNet은 좋은 성능을 가지고 있었으나 layer를 계속 누적해서 사용하기때문에 많은 Memory 차지한다는 단점이 있었다. 하지만 최근 CSPNet이나 HarDNet 처럼 DenseNet의 Memory 효율을 높이는 논문들이 많이 나오고 있다. 
 
@@ -48,7 +48,7 @@ HardNet의 파라미터들 부터 선언을 해준다. 여기서 grmul이 growth
 
 <br/>
 
-<HDB>
+#### **`HDB`**
 
 ```
 class HarDBlock(nn.Module):
@@ -126,6 +126,8 @@ class HarDBlock(nn.Module):
    
         return out
 ```
+
+<br/>
 
 <br/>
 
