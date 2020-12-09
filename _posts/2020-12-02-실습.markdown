@@ -1,17 +1,88 @@
 ---
 layout: post
-title:  "무선충전 주차장 Segmentation 실습(HarDNet)"
+title:  "무선충전 패드 인식 기반 자율주행 주차과제 Segmentation 실습(HarDNet)"
 date:   2020-12-02 08:43:59
 author: Sunwoo Lee
 categories: 실습
 tags: lorem ipsum
 ---
 
-This is just a dummy post. Lorem ipsum and all the rest.
+이번에 교내 무선충전 패드 인식 기반 자율주행 주차과제를 진행하면서 주차장 Segmentation 하기위해서 연구를 하였고 현재 **Real-time segmentation Sota**인 **HardNet**을 이용하여 Segmetation을 한 결과를 적어보려고 한다.
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+### HardNet 논문 리뷰
+
+이 논문은 이해하기 위해서는 기본적은 DenseNet의 구조에 대해서 알아야한다. DenseNet은 좋은 성능을 가지고 있었으나 layer를 계속 누적해서 사용하기때문에 많은 Memory 차지한다는 단점이 있었다. 하지만 최근 CSPNet이나 HarDNet 처럼 DenseNet의 Memory 효율을 높이는 논문들이 많이 나오고 있다. 
+
+먼저 논문의 서론을 짧게 설명하자면 최근 몇년간 나와서  가장 많이 사용되고 있는 ResNet, MobileNet, DenseNet 같은 논문들이 단순히 MACs만 낮추려고 시도해서 Real world inference time에는 적합하지 않다. 그래서 본 논문에서는 단순히 MACs만 낮추지 않고 feature map 중간에 접근하여 **Memory traffic을 낮추어서 Memory 효율을 높혔다는 논문**이다. 
+
+![IMG_0396](https://user-images.githubusercontent.com/47741696/101634458-12ba2480-3a6c-11eb-9d9c-562a506e306e.JPG)
+
+DenseNet의 구조에 대해서 알고 있다고 생각하고 논문을 코드화 할때 가장 신경을 써야하는 부분에 대해서 적어보았다. 여기서 이해가 안된다면 코드를 보면서 이해하면 쉽게 이해가 될 것이다. 
+
+- 위의 한 Block을 Harmonic Dense Block(HDB)라고 표현함
+- 2의 n승으로 나눠지는 Layer에 대해서 나눠지는 만큼 growth rate를 곱해준다.
+- Link 리스트로 각 Layer가 연결되는 최소의 layer들을 선택한다.
+- **마지막으로 홀수 층과 마무리 층만 Layer를 Concat하여 output으로 내보낸다**. 이렇게 하면 HDB의 짝수층을 폐기 할 수 있는데 여기서 짝수층들이 가지는 메모리 점유율이 홀수층들을 합친거보다 2~3배 높은 메모리를 가지고 있다. **`(이 논문의 핵심)`**
+
+
+
+### -코드 분석
+
+
+
+![Screenshot from 2020-12-02 14-42-11](https://user-images.githubusercontent.com/47741696/101640082-6714d280-3a73-11eb-9701-c6752d540386.png)
+
+HardNet의 파라미터들 부터 선언을 해준다. 여기서 grmul이 growth rate이고 gr은 n_layers를 보면 총 5개의 HDB로 구성되어있는데 각각의 Input_channel이다.
+
+
+
+![Screenshot from 2020-12-02 14-43-04](https://user-images.githubusercontent.com/47741696/101640616-0f2a9b80-3a74-11eb-93d7-3ac81e72ae57.png)
+
+HDB의 layer중에서 2의 n승으로 나눠지는 부분에만 grmul을 곱해주고 link를 통해서 다음 어떤 layer와 연결해야 되는지 알려주는 부분이다.
+
+
+
+![Screenshot from 2020-12-02 14-43-21](https://user-images.githubusercontent.com/47741696/101640880-6a5c8e00-3a74-11eb-8f51-1d5b13dbc438.png)
+
+get_link를 통해서 얻은 output, input, link들을 ModuleList를 통해서 연결해주는 부분이다.
+
+
+
+![Screenshot from 2020-12-02 14-43-31](https://user-images.githubusercontent.com/47741696/101641713-6f6e0d00-3a75-11eb-9999-c28d5a039e0d.png)
+
+HDB의 foward 부분은 ModuleList에서 홀수 layer와 마지막 layer를 concat하여서 output으로 내보내는 부분이다.
+
+
+
+지금까지 무선충전 패드 인식 기반 자율주행 주차과제에서 Segmentation 알고리즘으로 사용했던 HardNet의 논문 및 코드에 대해서 간단하게 소개를 했다. 
+
+
+
+### -결과
+
+<img width="1323" alt="gt_list" src="https://user-images.githubusercontent.com/47741696/101644136-2e2b2c80-3a78-11eb-836d-274ee70849ca.png">
+
+Labeling은 위에 그림처럼 진행을 하였다.
+
+
+
+<Label data 100장, Epoch 1000>
+
+![gt](https://user-images.githubusercontent.com/47741696/101644378-764a4f00-3a78-11eb-8056-e13f39b3c84c.PNG)
+
+- SGD
+- Learing rate = 0.02
+- Weight_decay = 0.0005
+- Momentum = 0.9
+
+
+
+<Label data 100장+ rotation 100장 , Epoch 1000>
+
+![gt2](https://user-images.githubusercontent.com/47741696/101644521-a134a300-3a78-11eb-95c6-ac98aaec0f40.PNG)
+
+- Adam
+- Learning rate = 0.001
+- Data Augmentation
+
+Finetuning으로 Data Augmentation과 Optimizer 변경하니 확실이 성능이 좋아지는 것을 확인하였다. Batch_size를 줄이면서 Adam으로 변경하여 Learning rate를 줄였고 회전에서 False positive가 많이 나왔는데 논문 컨셉 자체가 높은 계산 효율을 위해서 Receptive field를 3x3으로 고정하였기 때문에 건들지 않고 Data Augmentation을 통해서 해결하였다.
