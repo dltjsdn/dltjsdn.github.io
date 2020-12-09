@@ -24,6 +24,8 @@ DenseNet의 구조에 대해서 알고 있다고 생각하고 논문을 코드�
 - Link 리스트로 각 Layer가 연결되는 최소의 layer들을 선택한다.
 - **마지막으로 홀수 층과 마무리 층만 Layer를 Concat하여 output으로 내보낸다**. 이렇게 하면 HDB의 짝수층을 폐기 할 수 있는데 여기서 짝수층들이 가지는 메모리 점유율이 홀수층들을 합친거보다 2~3배 높은 메모리를 가지고 있다. **`(이 논문의 핵심)`**
 
+------
+
 
 
 ### -코드 분석
@@ -34,19 +36,19 @@ DenseNet의 구조에 대해서 알고 있다고 생각하고 논문을 코드�
 
 HardNet의 파라미터들 부터 선언을 해준다. 여기서 grmul이 growth rate이고 gr은 n_layers를 보면 총 5개의 HDB로 구성되어있는데 각각의 Input_channel이다.
 
-
+<br/>
 
 ![Screenshot from 2020-12-02 14-43-04](https://user-images.githubusercontent.com/47741696/101640616-0f2a9b80-3a74-11eb-93d7-3ac81e72ae57.png)
 
 HDB의 layer중에서 2의 n승으로 나눠지는 부분에만 grmul을 곱해주고 link를 통해서 다음 어떤 layer와 연결해야 되는지 알려주는 부분이다.
 
-
+<br/>
 
 ![Screenshot from 2020-12-02 14-43-21](https://user-images.githubusercontent.com/47741696/101640880-6a5c8e00-3a74-11eb-8f51-1d5b13dbc438.png)
 
 get_link를 통해서 얻은 output, input, link들을 ModuleList를 통해서 연결해주는 부분이다.
 
-
+<br/>
 
 ![Screenshot from 2020-12-02 14-43-31](https://user-images.githubusercontent.com/47741696/101641713-6f6e0d00-3a75-11eb-9999-c28d5a039e0d.png)
 
@@ -56,6 +58,8 @@ HDB의 foward 부분은 ModuleList에서 홀수 layer와 마지막 layer를 conc
 
 지금까지 무선충전 패드 인식 기반 자율주행 주차과제에서 Segmentation 알고리즘으로 사용했던 HardNet의 논문 및 코드에 대해서 간단하게 소개를 했다. 
 
+------
+
 
 
 ### -결과
@@ -64,7 +68,7 @@ HDB의 foward 부분은 ModuleList에서 홀수 layer와 마지막 layer를 conc
 
 Labeling은 위에 그림처럼 진행을 하였다.
 
-
+<br/>
 
 <Label data 100장, Epoch 1000>
 
@@ -75,7 +79,7 @@ Labeling은 위에 그림처럼 진행을 하였다.
 - Weight_decay = 0.0005
 - Momentum = 0.9
 
-
+<br/>
 
 <Label data 100장+ rotation 100장 , Epoch 1000>
 
