@@ -7,11 +7,11 @@ categories: 실습
 cover:  "/assets/activation.png"
 ---
 
-Custom
+딥러닝 이론을 배웠는데 막상 내가 가지고 있는 Data를 통해서 학습을 시켜보려고 하면 많은 어려움이 있다. 그래서 이번에는 Pycharm과 Pytorch를 통해서 **Custom Segmentation**을 해보려고 한다. 
 
-딥러닝 이론을 배웠는데 막상 내가 가지고 있는 Data를 통해서 학습을 시켜보려고 하면 많은 어려움이 있다. 그래서 이번에는 Pycharm과 Pytorch를 통해서 Custom Segmentation을 해보려고 한다. 
+먼저 Segmentation을 하기 위해서는 기본적으로 **Train data와 Label data**가 있어야한다. 추후에는 Overfitting을 방지하기 위해서 Validation data도 있어야하지만 오늘은 Train data와 Label data만 이용하여 학습을 시킬 예정이다. 
 
-먼저 Segmentation을 하기 위해서는 기본적으로 Train data와 Label data가 있어야한다. 추후에는 Overfitting을 방지하기 위해서 Validation data도 있어야하지만 오늘은 Train data와 Label data만 이용하여 학습을 시킬 예정이다. 본인이 가지고 있는 사진으로 학습을 진행하고 싶다면 Labelme같은 Label data를 만드는 툴을 사용해서 정답 data를 만들어야한다. 하지만 본인이 개발한 모델을 실험하고 싶다면 Kitti나 Camvid같은 공용 data set을 이용하는 방법도 있다. 
+본인이 가지고 있는 사진으로 학습을 진행하고 싶다면 Labelme같은 Label data를 만드는 툴을 사용해서 정답 data를 만들어야한다. 하지만 본인이 개발한 모델을 실험하고 싶다면 Kitti나 Camvid같은 공용 data set을 이용하는 방법도 있다. 
 
 
 
@@ -19,17 +19,70 @@ Custom
 
 http://mi.eng.cam.ac.uk/research/projects/VideoRec/CamSeq01/ <Camvid dataset>
 
-오늘은 Camvid라는 Dataset을 다운 받아서 Custom Segmentation을 해보려고 한다.  위에 사진을 보면 오른쪽은 Train data로 일반적인 사진이고 왼쪽은 Train data를 Labeling하여 정답을 만든 Label data이다. 이 두가지로 학습을 시켜 나중에 Train data로 사용하지 않은 Test data로 Visualize를 했을때 Label data와 비슷하게 나올수록 학습이 잘 되었다고 할 수 있다. 
+Camvid라는 Dataset을 다운 받아서 Custom Segmentation을 해보려고 한다.  위에 사진을 보면 오른쪽은 Train data로 일반적인 사진이고 왼쪽은 Train data를 Labeling하여 정답을 만든 Label data이다. 이 두가지로 학습을 시켜 나중에 Train data로 사용하지 않은 Test data로 Visualize를 했을때 Label data와 비슷하게 나올수록 학습이 잘 되었다고 할 수 있다. 
+
+<br/>
 
 #### -CustomizeDataset
 
 CustomizeDataset 작업은 이미지를 가져와서 Tensor형으로 변환하여 Pytorch로 학습을 할 수 있도록 작업해주는 과정이다. 
 
-![loader](https://user-images.githubusercontent.com/47741696/101295616-14b09780-3862-11eb-940f-cefb0ba03ba6.PNG)
+```
+img_path = '/home/lee/Downloads/CamSeq01/input/*.png'
+label_path = '/home/lee/Downloads/CamSeq01/GT/*.png'
+model_path = '/home/lee/Downloads/MERGE/Weights/'
+model_name = 'esp.pth'
+#pretrained_model = ' '
+num_batch_size = 4
+
+num_classes = 5
+num_epochs = 750
+
+use_cuda_ = torch.cuda.is_available()
+
+input_transform = trans.Compose([trans.ToTensor()])
+label_transform = trans.Compose([DataLoad.ToLabel()])
+
+
+DB = DataLoad.CustomizedDataset(img_path, label_path, input_transform, label_transform)
+
+loader = DataLoader(DB, batch_size=num_batch_size, shuffle=True)
+```
 
 먼저 아까 다운받은 Camvid 파일의 input(Traing data)와 GT(Label data)의 path를 지정해주고 DB에 Customize된 input과 GT를 저장시킨다. 
 
-![customdataset](https://user-images.githubusercontent.com/47741696/101295650-3873dd80-3862-11eb-965d-9bfa08a4eb38.PNG)
+<br/>
+
+```
+class ToLabel:
+
+    def __call__(self, image):
+        return torch.from_numpy(np.array(image)).long()
+
+
+class CustomizedDataset(Dataset):
+    def __init__(self, img_root, label_root, input_transform, target_transform):
+        self.img_root = img_root
+        self.label_root = label_root
+        self.input_transform = input_transform
+        self.target_transform = target_transform
+        self.img_filename = glob(img_root)
+        self.label_filename = glob(label_root)
+
+    def __getitem__(self, index):
+        image = Image.open(self.img_filename[index])
+        image = image.convert('RGB')
+        image = self.input_transform(image)
+
+        label = Image.open(self.label_filename[index])
+        label = label.convert('RGB')
+        label = self.target_transform(label)
+
+        return image, label
+
+    def __len__(self):
+        return len(self.img_filename)
+```
 
 내가 짠 코드를 보면 input, GT에 있는 이미지를 가져와서(glob) 순서대로 정렬을 하고(sort) __getitem__ 에서 Image를 열면 있는 픽셀값을 그대로 다 가져오기 때문에 Tensor형으로 변환하기 위해서 **RGB로 Convert**해주고 input, GT data를 학습할 수 있는 Tensor형으로 변환(_transform)한다. ToLabel 부분은 Label data의 image에 받아오는 pixel값들을 Tensor형으로 변환해주는 역활을 한다. 
 
@@ -38,6 +91,8 @@ loader = DataLoader(DB, batch_size=num_batch_size, shuffle=True)
 ```
 
 그후에 이렇게 DataLoader에 DB를 넣어주는데 DataLoader는 Pytorch에서 제공해주는 Function으로 batch_size, shuffle, sampler, num_workers 등등 많은 변수들을 지정해 줄 수 있는데 나는 batch_szie와 shuffle만 사용해서 코드를 구성했다.
+
+<br/>
 
 #### **-Training**
 
@@ -59,11 +114,46 @@ Optimizer는 Adam을 선택하였고 learning rate는 batch_size의 크기를 �
 
 Loss와 Optimizer에 대한 이해가 필요하면 https://dltjsdn.github.io/study/2020/08/24/Study.html 를 통해서 확인해보길 바란다.
 
+<br/>
 
+```
+def train(data_set, model, criterion, optimizer, use_cuda, pretrained=None):
+    model.train()
+    print('Training Starts!')
+    if use_cuda:
+        model = model.cuda()
+        model = nn.DataParallel(model)
+        criterion = criterion.cuda()
 
-![training](https://user-images.githubusercontent.com/47741696/101623461-d2eb4100-3a5b-11eb-8d1a-998ec072b767.PNG)
+    if pretrained is not None:
+        checkpoint = torch.load(pretrained)
+        model.load_state_dict(checkpoint['model_state_dict'])
+        print('Model Loaded!')
+
+    total_loss = 0.0
+    for epoch in range(num_epochs):
+        timer = 0.0
+        running_loss = 0.0
+        loss_len = 1.0
+        for idx, (inputs, labels) in enumerate(data_set):
+            if idx % 5 == 0:
+                start = time.time()
+            targets = transforms.TransLabel(labels, num_classes).Split_Channel()
+            if use_cuda:
+                inputs = inputs.cuda()
+                targets = targets.cuda()
+
+            optimizer.zero_grad()
+            outputs = model(inputs)
+
+            loss = criterion(outputs, targets)
+            loss.backward()
+            optimizer.step()
+```
 
 이제 실제 학습을 시키는 구간이다. 
+
+<br/>
 
 ```
 def train(data_set, model, criterion, optimizer, use_cuda, pretrained=None):
@@ -84,7 +174,7 @@ train에는 DB, Model, Loss, Optimizer, Use_cuda, Pretrained)에 대해서 넣�
 
 pretrained같은 경우는 먼저 학습한 모델을 가져와서 그 모델에 학습을 진행하는건데 사용하지 않아서 None값을 넣어줬다. 
 
- 
+ <br/>
 
 ```
  for epoch in range(num_epochs):
@@ -103,7 +193,7 @@ pretrained같은 경우는 먼저 학습한 모델을 가져와서 그 모델에
 
 DB에서 받은 train data input를 model에 넣고 label data target과 Loss를 구한다음 backward를 해주고 Optimizer를 통해서 Loss를 최적화 해준다. 이렇게 한번 도는게 한번의 epoch이고 epoch은 모델의 크기나 Data를 크기를 고려해서 정해준다. 
 
-
+<br/>
 
 #### -Visualize
 
@@ -152,7 +242,7 @@ for idx, (img_, label_) in enumerate(loader):
 
 아까 train에서는 설명을 안했는데 model_path를 torch.save({'model_state_dict': model.state_dict()}, full_path)를 통해서 학습 path를 저장을 하였다. train과 비슷하게 DB를 통해서 test data를 가져와서 visualize Function을 통해서 변환한 image를 RGB로 Convert해줘서 저장을 하는 코드이다. train과 다른점은 학습을 시키지 않기 때문에 epoch, Loss, optimizer를 사용하지 않는다. 
 
-
+<br/>
 
 ```
 def visualize(img_shape, predicted):
@@ -175,7 +265,7 @@ def visualize(img_shape, predicted):
 
 visualize는 이런식으로 코드를 구성해보았다. num_class가 5개라서 5개의 Colorize tensor를 만들었고 Label과 predicted가 동일 부분이 있으면 rgb를 stack하여서 visualize를 하였다.(training 할 때 사용한 Label data는 visualize 시킬 3개의 class(unlabeled, lane, freesapce) 즉,  [0,0,0]= unlabeled , [0,255,0] =lane , [0,0,255] =freespace로 변환하고 train에 사용하였다.) 
 
+<br/>
 
-
-HardNet 관련 Visualize 결과는 
+HardNet 관련 Visualize 결과는 https://dltjsdn.github.io/%EC%8B%A4%EC%8A%B5/2020/12/02/%EC%8B%A4%EC%8A%B5.html 이글에서 확인 할 수 있다.
 
