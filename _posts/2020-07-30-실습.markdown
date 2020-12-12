@@ -267,5 +267,5 @@ visualize는 이런식으로 코드를 구성해보았다. num_class가 5개라�
 
 <br/>
 
-HardNet 관련 Visualize 결과는 [https://dltjsdn.github.io/%EC%8B%A4%EC%8A%B5/2020/12/02/%EC%8B%A4%EC%8A%B5.htm]( https://dltjsdn.github.io/%EC%8B%A4%EC%8A%B5/2020/12/02/%EC%8B%A4%EC%8A%B5.htm)l 이글에서 확인 할 수 있다.
+HardNet 관련 Visualize 결과는 **[무선충전 패드 인식 기반 자율주행 주차과제 Segmentation 실습(HarDNet)](https://dltjsdn.github.io/실습/2020/12/02/실습.html)** 에서 확인 할 수 있다.
 

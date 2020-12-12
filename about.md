@@ -5,14 +5,104 @@ permalink: /about/
 main_nav: true
 ---
 
-![alt text]({{ site.baseurl }}/assets/profile-placeholder.gif "Profile Picture"){:.profile}
+### **Sun-Woo Lee**
 
-Centrarium is a custom theme for Jekyll, made by [Ben Centra][bencentra] for his own blog. He'd be humbled if you liked it enough to use it as well! Installation and configuration instructions can be found in the [GitHub repository](https://github.com/bencentra/centrarium).
+ 
 
-This page is a good place to write about yourself, your project, your product, or whatever it is your site is for. You can replace the image above, or you can get rid of it entirely. 
+Address: 1056, Osonggarak-ro, Oksan-myeon, Heungdeokc-gu, Cheongju-si, Chungbuk, Republic of  Korea 
 
-You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/). And you can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
+Tel: +82 -10-3477-3606      
 
-[centrarium]: https://github.com/bencentra/centrarium
-[bencentra]: http://bencentra.com
-[jekyll]: https://github.com/jekyll/jekyll
+E-mail: dltjsdn3606@chungbuk.ac.kr
+
+ 
+
+​                                                              
+
+# Education
+
+Chungbuk National University, South Korea  
+
+M.S in Smart Car Engineering                 Mar. 2020 – Present
+
+​              
+
+Chungbuk National University, South Korea    
+
+B.S in Electrical Engineering                       Mar. 2013 – Feb 2020
+
+ 
+
+# Work experience
+
+Cooperation with Other Groups
+
+\-     Co-work with Many Automotive Companies and Research Institutes to Perform Government Tasks
+
+ 
+
+Research in Various Development Environments
+
+\-     Algorithm Development and Validation on Windows, Linux PC and Embedded System
+
+\-     Test and DB Acquisition on Simulation Environment, proving Ground, Real Road
+
+ 
+
+Car Simulation(Carmaker)
+
+\-     Pre-check Algorithms for Difficult or Dangerous Situations using Carmaker 
+
+ 
+
+Experience using Multiple Sensors
+
+\-     Multiple Sensor’s Intrinsic / Extrinsic Calibration for Sensor Fusion
+
+ 
+
+Hyundai Motor Autonomous Vehicle Competition
+
+\-     Participated in Autonomous Vehicle Competition Organized by HYUNDAI Motor in 2021
+
+ 
+
+# Computer Skills & Languages
+
+SLAM
+
+Programming Language(C++, Python)
+
+Deep Learning Framework(Torch)
+
+Multi OS Programming(Window, Linux)
+
+ROS(Robot Operating System)
+
+Simulator(Carmaker)
+
+ 
+
+**Projects**
+
+Development of wide area driving environment awareness and cooperative driving 
+
+technology which are based on V2X wireless communication   2018 – 2019
+
+ 
+
+Development of autonomous driving open EV platform technology based on deep
+
+learning                                               2020 – Present
+
+ 
+
+Grand ICT Research Center (Chungbuk National University) 2020 – Present
+
+ 
+
+Forster R&D Expert for Future Car Technology Based on Eco System  2020 – Present
+
+# Paper
+
+S.Lee, C.Park S.kee, “Registration Based 3D LiDAR SLAM in Outdoor Environment”, KSAE Spring Conference Proceedings, 2020
